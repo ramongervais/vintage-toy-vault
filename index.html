@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Vault — Vintage Toy Watch</title>
+<style>
+  :root {
+    --ground: #101319; --panel: #171b23; --panel-2: #1e2431; --line: #2a3140; --line-soft: #222836;
+    --ink: #e9ebf1; --ink-dim: #99a1b2; --ink-faint: #6b7385;
+    --sw: #e8b530; --sw-soft: #e8b53022; --tmnt: #6cc04a; --tmnt-soft: #6cc04a1f;
+    --alert: #ff5a3c; --alert-soft: #ff5a3c26;
+    --deal: #34d3bf; --deal-soft: #34d3bf1f;
+    --auction: #6ea8ff;
+    --shadow: 0 1px 3px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.30);
+    --font-display: "Arial Narrow", "Roboto Condensed", "Oswald", system-ui, sans-serif;
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --ground: #eef0ea; --panel: #ffffff; --panel-2: #f5f6f2; --line: #d9dcd2; --line-soft: #e6e8e0;
+      --ink: #1b1e18; --ink-dim: #575d52; --ink-faint: #8a9082;
+      --sw: #a67c07; --sw-soft: #a67c0714; --tmnt: #3f8a26; --tmnt-soft: #3f8a2614;
+      --alert: #d63b1f; --alert-soft: #d63b1f14; --deal: #0f9e8e; --deal-soft: #0f9e8e14; --auction: #2f5fc0;
+      --shadow: 0 1px 2px rgba(20,30,20,.06), 0 8px 22px rgba(20,30,20,.09);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#101319;--panel:#171b23;--panel-2:#1e2431;--line:#2a3140;--line-soft:#222836;
+    --ink:#e9ebf1;--ink-dim:#99a1b2;--ink-faint:#6b7385;
+    --sw:#e8b530;--sw-soft:#e8b53022;--tmnt:#6cc04a;--tmnt-soft:#6cc04a1f;
+    --alert:#ff5a3c;--alert-soft:#ff5a3c26;--deal:#34d3bf;--deal-soft:#34d3bf1f;--auction:#6ea8ff;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.30);
+  }
+  :root[data-theme="light"] {
+    --ground:#eef0ea;--panel:#ffffff;--panel-2:#f5f6f2;--line:#d9dcd2;--line-soft:#e6e8e0;
+    --ink:#1b1e18;--ink-dim:#575d52;--ink-faint:#8a9082;
+    --sw:#a67c07;--sw-soft:#a67c0714;--tmnt:#3f8a26;--tmnt-soft:#3f8a2614;
+    --alert:#d63b1f;--alert-soft:#d63b1f14;--deal:#0f9e8e;--deal-soft:#0f9e8e14;--auction:#2f5fc0;
+    --shadow:0 1px 2px rgba(20,30,20,.06),0 8px 22px rgba(20,30,20,.09);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin:0; background:var(--ground); color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; line-height:1.45; }
+  a { color: inherit; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px 72px; }
+
+  header.mast { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--ground) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .mast-inner { max-width:1200px; margin:0 auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .brand { display:flex; align-items:baseline; gap:12px; min-width:0; }
+  .wordmark { font-family:var(--font-display); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:clamp(26px,4.4vw,40px); line-height:.9; transform:scaleY(1.06); transform-origin:left bottom; }
+  .wordmark .the { color: var(--ink-faint); }
+  .tagline { font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; color:var(--ink-dim); text-transform:uppercase; }
+  .mast-right { display:flex; align-items:center; gap:14px; }
+  .sync { display:flex; align-items:center; gap:9px; font-family:var(--font-mono); font-size:11.5px; color:var(--ink-dim); letter-spacing:.02em; white-space:nowrap; }
+  .sync .dot { width:8px; height:8px; border-radius:50%; background:var(--tmnt); animation:livepulse 2.6s ease-out infinite; }
+  @keyframes livepulse { 0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--tmnt) 55%,transparent);} 70%{box-shadow:0 0 0 7px transparent;} 100%{box-shadow:0 0 0 0 transparent;} }
+  .theme-btn { font-family:var(--font-mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-dim); background:transparent; border:1px solid var(--line); border-radius:7px; padding:6px 10px; cursor:pointer; }
+  .theme-btn:hover { color:var(--ink); border-color:var(--ink-faint); }
+
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:26px 0 22px; }
+  .stat { background:var(--panel); border:1px solid var(--line-soft); border-radius:12px; padding:14px 16px; position:relative; overflow:hidden; }
+  .stat .k { font-family:var(--font-mono); font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:8px; }
+  .stat .v { font-family:var(--font-display); font-weight:700; font-size:34px; line-height:1; transform:scaleY(1.04); transform-origin:left; font-variant-numeric:tabular-nums; }
+  .stat .sub { font-family:var(--font-mono); font-size:10.5px; color:var(--ink-faint); margin-top:6px; letter-spacing:.02em; }
+  .stat .rail { position:absolute; left:0; top:0; bottom:0; width:3px; }
+  .stat.alert .v { color:var(--alert); } .stat.alert .rail { background:var(--alert); }
+  .stat.deal .v { color:var(--deal); } .stat.deal .rail { background:var(--deal); }
+  .stat.sw .rail { background:var(--sw); } .stat.tmnt .rail { background:var(--tmnt); }
+
+  .controls { display:flex; align-items:center; gap:10px 12px; flex-wrap:wrap; padding:12px 0 20px; border-bottom:1px solid var(--line-soft); margin-bottom:22px; }
+  .seg { display:inline-flex; background:var(--panel); border:1px solid var(--line); border-radius:9px; padding:3px; gap:2px; }
+  .seg button { font-family:var(--font-mono); font-size:11.5px; letter-spacing:.03em; text-transform:uppercase; color:var(--ink-dim); background:transparent; border:0; border-radius:6px; padding:7px 12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+  .seg button .g { width:8px; height:8px; border-radius:2px; }
+  .seg button[data-ch="sw"] .g { background:var(--sw); } .seg button[data-ch="tmnt"] .g { background:var(--tmnt); }
+  .seg button.on { background:var(--panel-2); color:var(--ink); box-shadow:inset 0 0 0 1px var(--line); }
+  .seg button:hover:not(.on) { color:var(--ink); }
+
+  .toggle { display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-family:var(--font-mono); font-size:11.5px; letter-spacing:.03em; text-transform:uppercase; color:var(--ink-dim); user-select:none; }
+  .toggle .track { width:34px; height:19px; border-radius:20px; background:var(--panel-2); border:1px solid var(--line); position:relative; transition:background .15s; }
+  .toggle .knob { position:absolute; top:1px; left:1px; width:15px; height:15px; border-radius:50%; background:var(--ink-dim); transition:transform .15s, background .15s; }
+  .toggle[data-accent="alert"].on .track { background:var(--alert-soft); border-color:var(--alert); }
+  .toggle[data-accent="alert"].on .knob { transform:translateX(15px); background:var(--alert); }
+  .toggle[data-accent="deal"].on .track { background:var(--deal-soft); border-color:var(--deal); }
+  .toggle[data-accent="deal"].on .knob { transform:translateX(15px); background:var(--deal); }
+  .toggle.on { color:var(--ink); }
+
+  .spacer { flex:1 1 auto; }
+  select.sort, input.search { font-family:var(--font-mono); font-size:12px; color:var(--ink); background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:8px 11px; }
+  input.search { width:170px; }
+  input.search::placeholder { color:var(--ink-faint); }
+  :focus-visible { outline:2px solid var(--auction); outline-offset:2px; }
+
+  .feed { display:grid; grid-template-columns:repeat(auto-fill, minmax(262px,1fr)); gap:16px; }
+  .card { position:relative; background:var(--panel); border:1px solid var(--line-soft); border-top:3px solid var(--line); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; box-shadow:var(--shadow); transition:transform .14s ease, border-color .14s ease; }
+  .card.sw { border-top-color:var(--sw); } .card.tmnt { border-top-color:var(--tmnt); }
+  .card:hover { transform:translateY(-3px); }
+
+  .thumb { position:relative; aspect-ratio:4/3; background:linear-gradient(135deg, var(--panel-2), var(--panel)); overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .thumb .ph { font-family:var(--font-display); font-weight:700; text-transform:uppercase; letter-spacing:.1em; font-size:13px; color:var(--ink-faint); opacity:.5; }
+  .thumb img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .thumb .chan { position:absolute; left:10px; top:10px; font-family:var(--font-mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; padding:3px 8px; border-radius:5px; backdrop-filter:blur(6px); }
+  .card.sw .thumb .chan { color:#1a1400; background:color-mix(in srgb, var(--sw) 88%, transparent); }
+  .card.tmnt .thumb .chan { color:#06210a; background:color-mix(in srgb, var(--tmnt) 88%, transparent); }
+  .thumb .flags { position:absolute; right:10px; top:10px; display:flex; flex-direction:column; gap:6px; align-items:flex-end; }
+  .thumb .fb { font-family:var(--font-mono); font-size:9.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; border-radius:5px; padding:3px 7px; display:inline-flex; align-items:center; gap:5px; }
+  .thumb .fb.new { color:#fff; background:var(--alert); }
+  .thumb .fb.deal { color:#062521; background:var(--deal); }
+  .thumb .fb .b { width:6px; height:6px; border-radius:50%; background:currentColor; animation:newpulse 1.5s ease-in-out infinite; }
+  @keyframes newpulse { 0%,100%{opacity:.35;} 50%{opacity:1;} }
+
+  .body { padding:13px 14px 14px; display:flex; flex-direction:column; gap:9px; flex:1; }
+  .title { font-size:14.5px; font-weight:620; line-height:1.28; letter-spacing:-.01em; text-wrap:balance; margin:0; }
+  .price-row { display:flex; align-items:baseline; gap:9px; flex-wrap:wrap; }
+  .price { font-family:var(--font-mono); font-size:17px; font-weight:600; font-variant-numeric:tabular-nums; letter-spacing:-.01em; }
+  .price.bid { color:var(--ink-dim); font-size:14px; }
+  .tag { font-family:var(--font-mono); font-size:10px; letter-spacing:.06em; text-transform:uppercase; padding:2px 7px; border-radius:4px; border:1px solid var(--line); color:var(--ink-dim); }
+  .tag.auction { color:var(--auction); border-color:color-mix(in srgb, var(--auction) 40%, var(--line)); }
+
+  .meta { font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); letter-spacing:.02em; display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+  .meta .sep { opacity:.5; }
+
+  .market { font-family:var(--font-mono); font-size:10.5px; color:var(--ink-dim); display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+  .market .mv { color:var(--ink); }
+  .verdict { font-size:9px; text-transform:uppercase; letter-spacing:.08em; padding:2px 6px; border-radius:4px; font-weight:700; }
+  .verdict.deal { color:var(--deal); background:var(--deal-soft); }
+  .verdict.warn { color:var(--alert); background:var(--alert-soft); }
+  .verdict.info { color:var(--ink-dim); border:1px solid var(--line); }
+
+  .scan { font-family:var(--font-mono); font-size:10.5px; display:flex; align-items:flex-start; gap:6px; line-height:1.4; }
+  .scan .si { margin-top:.5px; font-weight:700; }
+  .scan.good { color:var(--deal); } .scan.warn { color:var(--alert); } .scan.info { color:var(--ink-faint); }
+  .scan .src { color:var(--ink-faint); text-transform:uppercase; letter-spacing:.05em; font-size:8.5px; border:1px solid var(--line); border-radius:3px; padding:1px 4px; margin-left:auto; white-space:nowrap; }
+
+  .seller { font-family:var(--font-mono); font-size:10.5px; letter-spacing:.02em; display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border-radius:6px; width:max-content; max-width:100%; }
+  .seller .sd { width:7px; height:7px; border-radius:2px; flex:none; }
+  .seller.pro { color:var(--ink-dim); background:var(--panel-2); border:1px solid var(--line); }
+  .seller.pro .sd { background:var(--ink-faint); }
+  .seller.private { color:var(--deal); background:var(--deal-soft); border:1px solid color-mix(in srgb, var(--deal) 35%, transparent); }
+  .seller.private .sd { background:var(--deal); border-radius:50%; }
+
+  .card-foot { margin-top:auto; padding-top:11px; border-top:1px solid var(--line-soft); }
+  .card-foot a { text-decoration:none; font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-dim); display:inline-flex; align-items:center; gap:6px; }
+  .card-foot a:hover { color:var(--ink); }
+  .card-foot a .arw { transition:transform .14s; }
+  .card-foot a:hover .arw { transform:translate(2px,-2px); }
+
+  .empty { grid-column:1/-1; text-align:center; padding:64px 20px; color:var(--ink-faint); font-family:var(--font-mono); font-size:13px; letter-spacing:.03em; line-height:1.7; }
+
+  footer.foot { margin-top:44px; padding-top:22px; border-top:1px solid var(--line-soft); font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); letter-spacing:.02em; line-height:1.75; }
+  footer.foot b { color:var(--ink-dim); font-weight:600; }
+
+  @media (max-width:760px) { .stats { grid-template-columns:repeat(2,1fr); } input.search { width:100%; } .controls .spacer { display:none; } }
+  @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-inner">
+    <div class="brand">
+      <div class="wordmark"><span class="the">THE</span> VAULT</div>
+      <div class="tagline">vintage watch · star wars + turtles</div>
+    </div>
+    <div class="mast-right">
+      <div class="sync"><span class="dot"></span><span id="syncText">synced —</span></div>
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle light and dark theme">Theme</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="stats" id="stats"></section>
+
+  <div class="controls">
+    <div class="seg" id="chanSeg" aria-label="Channel">
+      <button data-ch="all" class="on">All</button>
+      <button data-ch="sw"><span class="g"></span>Star Wars</button>
+      <button data-ch="tmnt"><span class="g"></span>Turtles</button>
+    </div>
+    <div class="seg" id="priceSeg" aria-label="Price band">
+      <button data-pr="all" class="on">Any €</button>
+      <button data-pr="lo">&le; €50</button>
+      <button data-pr="hi">&gt; €50</button>
+      <button data-pr="bid">Bieden</button>
+    </div>
+    <div class="toggle" id="oppToggle" data-accent="deal" role="switch" aria-checked="false" tabindex="0">
+      <span class="track"><span class="knob"></span></span> Opportunities only
+    </div>
+    <div class="toggle" id="newToggle" data-accent="alert" role="switch" aria-checked="false" tabindex="0">
+      <span class="track"><span class="knob"></span></span> New only
+    </div>
+    <div class="spacer"></div>
+    <input class="search" id="search" type="search" placeholder="filter title…" aria-label="Filter by title" />
+    <select class="sort" id="sort" aria-label="Sort">
+      <option value="new">Newest first</option>
+      <option value="deal">Best vs market</option>
+      <option value="plo">Price: low → high</option>
+      <option value="phi">Price: high → low</option>
+    </select>
+  </div>
+
+  <section class="feed" id="feed"></section>
+
+  <footer class="foot">
+    <div><b>What this is.</b> A personal watch feed for vintage (original-era) Star Wars &amp; Teenage Mutant Ninja Turtles toys on Marktplaats. Modern reissues are filtered out. Items posted since the last sync are flagged <b>NEW</b>.</div>
+    <div style="margin-top:8px"><b>Seller read.</b> <span style="color:var(--deal)">Private find</span> = a one-off / small private seller, where the underpriced buys tend to be. <span style="color:var(--ink-dim)">Dealer / Collector</span> = an account running many varied listings. Flip on <b>Opportunities only</b> to hide the pros.</div>
+    <div style="margin-top:8px"><b>Market &amp; scan.</b> <span style="color:var(--deal)">Market (eBay est.)</span> is a rough loose/complete range for comparison — <span style="color:var(--deal)">Onder markt</span> means the ask sits below it. The <b>scan</b> line reports completeness (weapons/accessories); <span style="color:var(--ink-faint)">FOTO</span> = read from the photo, <span style="color:var(--ink-faint)">LISTING</span> = from the seller's text.</div>
+    <div style="margin-top:8px">Estimates and classifications are guidance, not gospel. Prices and stock move fast — always confirm on Marktplaats. Not affiliated with Marktplaats or eBay.</div>
+  </footer>
+</div>
+
+<script>
+  /* ============ DATA (synced from Marktplaats) ============ */
+  const LAST_SYNC = "2026-07-29T09:00:00";
+  const BASE = "https://www.marktplaats.nl";
+  const IMG = "https://images.marktplaats.com/api/v1/hz-mp-pro-listing/images/";
+  const IMG_RULE = "?rule=ecg_mp_eps$_83";
+
+  /* Fields:
+     price: asking price €, or null = "Bieden" (auction)
+     pro:   true = dealer/collector (many/varied ads); ads = attributed active-ad count
+     mLo/mHi: est. eBay loose/complete market range €, or null for un-valuable lots
+     scan:  completeness note; sflag = good|warn|info; ssrc = FOTO (vision) or LISTING (seller text) */
+  const LISTINGS = [
+    // ---------- STAR WARS (vintage Kenner) ----------
+    { brand:"sw", title:"Vintage Kenner Star Wars Dengar actiefiguur", price:null, loc:"Hoofddorp", posted:"2026-07-29", img:"0c04e5b4-76f3-4e09-b76a-2a858a5bb3a8", seller:"cornerstone", pro:true, ads:12, mLo:12, mHi:25, scan:"Geen wapen zichtbaar — mist blaster rifle", sflag:"warn", ssrc:"FOTO" },
+    { brand:"sw", title:"Vintage Kenner Star Wars Bossk actiefiguur (1980)", price:null, loc:"Hoofddorp", posted:"2026-07-29", img:"cb8e8404-bdca-412b-88e1-d05b7694938f", seller:"cornerstone", pro:true, ads:12, mLo:55, mHi:120, scan:"Geen wapen zichtbaar — mist rifle (waardebepalend)", sflag:"warn", ssrc:"FOTO" },
+    { brand:"sw", title:"Nikto Kenner Vintage 1984 Star Wars actiefiguur", price:null, loc:"Hoofddorp", posted:"2026-07-29", img:"7a405173-4e06-421f-a951-7be3eb5c5f31", seller:"cornerstone", pro:true, ads:12, mLo:18, mHi:40, scan:"Geen wapen zichtbaar — mist staff/rifle", sflag:"warn", ssrc:"FOTO" },
+    { brand:"sw", title:"Star Wars 8D8 Kenner Vintage actiefiguur 1983", price:null, loc:"Hoofddorp", posted:"2026-07-29", img:"88ab5dfd-7539-4b46-87a0-a1eda61438dc", seller:"cornerstone", pro:true, ads:12, mLo:10, mHi:22, scan:"Droïde — geen accessoires nodig", sflag:"good", ssrc:"LISTING" },
+    { brand:"sw", title:"Star Wars Vintage Kenner Rebel Commando actiefiguur", price:null, loc:"Hoofddorp", posted:"2026-07-29", img:"16cbaf81-c746-45ee-9a1e-311ab76776d7", seller:"cornerstone", pro:true, ads:12, mLo:8, mHi:16, scan:"Blaster niet vermeld — controleer op foto", sflag:"info", ssrc:"LISTING" },
+    { brand:"sw", title:"Chief Chirpa Kenner Vintage Star Wars figuur (1983)", price:null, loc:"Hoofddorp", posted:"2026-07-29", img:"a6997acd-ccce-4a95-84ae-95edbc639e4d", seller:"cornerstone", pro:true, ads:12, mLo:10, mHi:20, scan:"Staf/hoorn niet vermeld", sflag:"info", ssrc:"LISTING" },
+    { brand:"sw", title:"4-LOM Kenner Vintage Star Wars met origineel wapen", price:null, loc:"Hoofddorp", posted:"2026-07-29", img:"6f53c87c-6432-40f2-8227-c0d0e3e22b01", seller:"cornerstone", pro:true, ads:12, mLo:22, mHi:45, scan:"Compleet — originele blaster in hand ✓", sflag:"good", ssrc:"FOTO" },
+    { brand:"sw", title:"Star Wars Kenner Vintage TIE Fighter Piloot actiefiguur", price:null, loc:"Hoofddorp", posted:"2026-07-29", img:"57beabf4-fc2a-428f-b82b-abaa19158c11", seller:"cornerstone", pro:true, ads:12, mLo:12, mHi:26, scan:"Blaster niet vermeld — controleer op foto", sflag:"info", ssrc:"LISTING" },
+    { brand:"sw", title:"Vintage Star Wars Han Solo actiefiguur", price:null, loc:"Delft", posted:"2026-07-29", img:"81cb918f-cfb8-437b-a337-d06832ddfc24", seller:"Werte", pro:false, ads:2, mLo:10, mHi:28, scan:"Blaster niet vermeld — versie/variant checken", sflag:"info", ssrc:"LISTING" },
+    { brand:"sw", title:"Vintage Star Wars Lando Calrissian actiefiguur met cape", price:null, loc:"Delft", posted:"2026-07-29", img:"c9c88c55-fab9-46d2-8638-316c47ba78b9", seller:"Werte", pro:false, ads:2, mLo:12, mHi:26, scan:"Originele cape aanwezig ✓ (blaster niet vermeld)", sflag:"good", ssrc:"LISTING" },
+    { brand:"sw", title:"Vintage Star Wars Hoth Echo Base Playset Kenner", price:null, loc:"Hoofddorp", posted:"2026-07-24", img:"e6554438-28b4-47f4-a410-28a5f96b0865", seller:"cornerstone", pro:true, ads:12, mLo:45, mHi:95, scan:"Playset — compleetheid onbekend, vraag naar onderdelen", sflag:"info", ssrc:"LISTING" },
+    { brand:"sw", title:"Vintage Kenner Greedo Star Wars actiefiguur, perfecte staat", price:null, loc:"Hoofddorp", posted:"2026-07-25", img:"b138ec6b-9867-4f6f-9927-634cff88fe15", seller:"cornerstone", pro:true, ads:12, mLo:22, mHi:45, scan:"Staat: perfect (verkoper) — blaster niet vermeld", sflag:"info", ssrc:"LISTING" },
+    { brand:"sw", title:"Vintage Kenner Star Wars Emperor Palpatine actiefiguur", price:null, loc:"Hoofddorp", posted:"2026-07-24", img:"87a487f5-f96d-403c-b88f-4ce1113645e5", seller:"cornerstone", pro:true, ads:12, mLo:8, mHi:18, scan:"Wandelstok niet vermeld", sflag:"info", ssrc:"LISTING" },
+    { brand:"sw", title:"Star Wars Kenner Snowspeeder vintage die-cast 1980", price:25, loc:"Brunssum", posted:"2026-07-27", img:"d179bbf7-6569-4c3f-b06d-938b03a0a64b", seller:"The Collector", pro:false, ads:1, mLo:30, mHi:65, scan:"Die-cast — compleetheid (canopy/onderdelen) onbekend", sflag:"info", ssrc:"LISTING" },
+    { brand:"sw", title:"Vintage Kenner Star Wars Imperial Troop Transport (1979)", price:null, loc:"Hoofddorp", posted:"2026-07-24", img:"e509b64e-fa6b-409a-b18d-d95cb91f6626", seller:"cornerstone", pro:true, ads:12, mLo:40, mHi:85, scan:"Elektronica/onderdelen onbekend — vraag naar werking", sflag:"info", ssrc:"LISTING" },
+    { brand:"sw", title:"Star Wars vintage Snowspeeder 1977-80 Kenner (alleen doos)", price:250, loc:"Heerhugowaard", posted:"2026-07-28", img:"374575ed-8fba-44ea-9dc1-ffbfcb2c0915", seller:null, pro:false, ads:1, mLo:15, mHi:40, scan:"Alleen de doos — geen voertuig inbegrepen", sflag:"warn", ssrc:"LISTING" },
+
+    // ---------- TEENAGE MUTANT NINJA TURTLES (vintage Playmates) ----------
+    { brand:"tmnt", title:"Vintage Teenage Mutant Ninja Turtles actiefiguur", price:12.5, loc:"Katwijk", posted:"2026-07-28", img:"b2bbcb4e-a614-48f2-a031-994ff2f5aaa9", seller:null, pro:false, ads:1, mLo:8, mHi:20, scan:"Accessoires niet vermeld — losse figuur", sflag:"info", ssrc:"LISTING" },
+    { brand:"tmnt", title:"Ninja Turtles speelgoed, mega veel (lot)", price:null, loc:"Putten", posted:"2026-07-23", img:"f6005802-144e-4fd7-9915-87086816fb11", seller:null, pro:false, ads:1, mLo:null, mHi:null, scan:"Bulk lot — inhoud varieert, vraag foto's", sflag:"info", ssrc:"LISTING" },
+    { brand:"tmnt", title:"TMNT Teenage Mutant Ninja Turtles kartonnen display", price:null, loc:"Cuijk", posted:"2026-07-20", img:"57655027-f152-4ed7-a7fa-4ba6551b8acd", seller:null, pro:false, ads:1, mLo:15, mHi:45, scan:"Winkeldisplay (karton) — staat is bepalend", sflag:"info", ssrc:"LISTING" },
+    { brand:"tmnt", title:"Vintage TMNT Pizza Van met schijfjes", price:null, loc:"Apeldoorn", posted:"2026-07-27", img:"00bfffc4-ce7a-42db-ab6b-6fd7f2ad2e05", seller:null, pro:false, ads:1, mLo:40, mHi:90, scan:"Inclusief pizza-schijfjes ✓ (per listing)", sflag:"good", ssrc:"LISTING" },
+    { brand:"tmnt", title:"Vintage TMNT vingerpoppetjes", price:null, loc:"Barneveld", posted:"2026-07-26", img:"99caa031-1458-4dc2-ab1d-55b33eae80f2", seller:null, pro:false, ads:1, mLo:10, mHi:25, scan:"Set vingerpoppetjes — aantal checken", sflag:"info", ssrc:"LISTING" },
+    { brand:"tmnt", title:"10 verschillende Teenage Mutant Ninja Turtles figuren", price:null, loc:"Lutjebroek", posted:"2026-07-26", img:"bc6cdf7f-ff79-4036-8b22-cdbcceaa610c", seller:null, pro:false, ads:1, mLo:null, mHi:null, scan:"Lot van 10 figuren — losse accessoires onbekend", sflag:"info", ssrc:"LISTING" },
+    { brand:"tmnt", title:"Vintage TMNT Leonardo Jumbo 1989, met origineel zwaard", price:60, loc:"'s-Heerenberg", posted:"2026-07-28", img:"03e2d0c5-6f25-4f2e-adb9-ea5ed5ea4a83", seller:null, pro:true, ads:5, mLo:40, mHi:90, scan:"Origineel zwaard aanwezig ✓ (per listing)", sflag:"good", ssrc:"LISTING" },
+    { brand:"tmnt", title:"Grote collectie Teenage Mutant Ninja Turtles voertuigen", price:null, loc:"Reuver", posted:"2026-07-10", img:"ba3d3c36-3d4c-4c8c-9544-e1658588c094", seller:null, pro:false, ads:1, mLo:null, mHi:null, scan:"Lot voertuigen — compleetheid per stuk checken", sflag:"info", ssrc:"LISTING" },
+    { brand:"tmnt", title:"Vintage TMNT Pizza Thrower, compleet", price:100, loc:"'s-Heerenberg", posted:"2026-07-20", img:"7f5bc57a-ca13-402d-984d-bf03accb03c8", seller:null, pro:true, ads:5, mLo:55, mHi:110, scan:"Compleet — doos, handleiding én pizza-schijven ✓", sflag:"good", ssrc:"FOTO" },
+    { brand:"tmnt", title:"Vintage TMNT TurtleCopter, compleet", price:125, loc:"'s-Heerenberg", posted:"2026-07-20", img:"d68c8ec6-2eac-4dd9-9e89-5c703d83523c", seller:null, pro:true, ads:5, mLo:70, mHi:140, scan:"Compleet in doos + handleiding ✓", sflag:"good", ssrc:"FOTO" },
+    { brand:"tmnt", title:"Vintage Teenage Mutant Ninja Turtles en accessoires", price:80, loc:"Zoetermeer", posted:"2026-07-27", img:"3f4e4096-2f69-40a7-b747-91d69026fd79", seller:null, pro:false, ads:1, mLo:40, mHi:95, scan:"Inclusief accessoires (per listing) — inhoud checken", sflag:"good", ssrc:"LISTING" },
+    { brand:"tmnt", title:"Vintage TMNT helikopter 1990", price:null, loc:"Drempt", posted:"2026-07-22", img:"7395d5d8-a298-4a30-8f4d-11f5eec7f1c0", seller:null, pro:false, ads:1, mLo:55, mHi:120, scan:"Compleetheid onbekend — vraag naar rotors/onderdelen", sflag:"info", ssrc:"LISTING" },
+    { brand:"tmnt", title:"TMNT Fugitoid 1990 Teenage Mutant Ninja Turtles vintage", price:null, loc:"Nieuwegein", posted:"2026-07-20", img:"d8a43c4d-23ee-4369-a0b6-bdc87ad8a3a6", seller:null, pro:false, ads:1, mLo:15, mHi:35, scan:"Accessoires niet vermeld", sflag:"info", ssrc:"LISTING" },
+    { brand:"tmnt", title:"Vintage TMNT RetroCatapult, compleet", price:60, loc:"'s-Heerenberg", posted:"2026-07-20", img:"5d1a6e46-0c7f-48ff-b727-27d09bb4341c", seller:null, pro:true, ads:5, mLo:30, mHi:60, scan:"Compleet (verkoper) ✓ — onderdelen checken", sflag:"good", ssrc:"LISTING" },
+    { brand:"tmnt", title:"Vintage TMNT TurtleCycle, compleet", price:75, loc:"'s-Heerenberg", posted:"2026-07-20", img:"be046760-5285-4580-aa70-80767b04aca9", seller:null, pro:true, ads:5, mLo:35, mHi:75, scan:"Compleet (verkoper) ✓", sflag:"good", ssrc:"LISTING" },
+    { brand:"tmnt", title:"Vintage Teenage Mutant Ninja Turtles actiefiguren, set b", price:null, loc:"Rijen", posted:"2026-07-16", img:"d3073af0-545c-434a-979c-086c1979596d", seller:null, pro:false, ads:1, mLo:null, mHi:null, scan:"Set figuren — losse wapens/accessoires onbekend", sflag:"info", ssrc:"LISTING" },
+  ];
+  /* ============ END DATA ============ */
+
+  const BRAND = { sw:{ label:"Star Wars" }, tmnt:{ label:"Turtles" } };
+  const state = { chan:"all", price:"all", oppOnly:false, newOnly:false, q:"", sort:"new" };
+  const syncDate = new Date(LAST_SYNC);
+
+  function isNew(l){
+    const p = new Date(l.posted + "T00:00:00");
+    const cutoff = new Date(syncDate); cutoff.setHours(0,0,0,0); cutoff.setDate(cutoff.getDate()-1);
+    return p >= cutoff;
+  }
+  // under-market deal: has an asking price that sits below the est. market floor
+  function isDeal(l){ return l.price != null && l.mLo != null && l.price < l.mLo; }
+  LISTINGS.forEach(l => { l._new = isNew(l); l._opp = !l.pro; l._deal = isDeal(l); });
+
+  function fmtPrice(l){
+    if (l.price == null) return "Bieden";
+    const dec = Number.isInteger(l.price) ? 0 : 2;
+    return "€ " + l.price.toLocaleString("nl-NL", { minimumFractionDigits:dec, maximumFractionDigits:2 });
+  }
+  function fmtDate(l){
+    const p = new Date(l.posted + "T00:00:00");
+    const t = new Date(syncDate); t.setHours(0,0,0,0);
+    const diff = Math.round((t - p) / 86400000);
+    if (diff <= 0) return "vandaag";
+    if (diff === 1) return "gisteren";
+    if (diff === 2) return "eergisteren";
+    return diff + " dagen geleden";
+  }
+  function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+  function href(l){ return BASE + "/q/" + encodeURIComponent(l.title) + "/"; }
+
+  function renderStats(){
+    const newCount = LISTINGS.filter(l => l._new).length;
+    const deals = LISTINGS.filter(l => l._deal).length;
+    const opp = LISTINGS.filter(l => l._opp).length;
+    const total = LISTINGS.length;
+    const s = new Date(LAST_SYNC);
+    const syncStr = s.toLocaleDateString("nl-NL", { day:"2-digit", month:"short" }) + " · " + s.toLocaleTimeString("nl-NL", { hour:"2-digit", minute:"2-digit" });
+    document.getElementById("syncText").textContent = "synced " + syncStr;
+    document.getElementById("stats").innerHTML = `
+      <div class="stat alert"><span class="rail"></span><div class="k">New since sync</div><div class="v">${newCount}</div><div class="sub">flagged listings</div></div>
+      <div class="stat deal"><span class="rail"></span><div class="k">Under market</div><div class="v">${deals}</div><div class="sub">ask &lt; eBay est.</div></div>
+      <div class="stat deal"><span class="rail"></span><div class="k">Opportunities</div><div class="v">${opp}</div><div class="sub">private sellers</div></div>
+      <div class="stat"><div class="k">Now tracking</div><div class="v">${total}</div><div class="sub">vintage listings</div></div>`;
+  }
+
+  function currentList(){
+    let list = LISTINGS.slice();
+    if (state.chan !== "all") list = list.filter(l => l.brand === state.chan);
+    if (state.price === "lo") list = list.filter(l => l.price != null && l.price <= 50);
+    else if (state.price === "hi") list = list.filter(l => l.price != null && l.price > 50);
+    else if (state.price === "bid") list = list.filter(l => l.price == null);
+    if (state.oppOnly) list = list.filter(l => l._opp);
+    if (state.newOnly) list = list.filter(l => l._new);
+    if (state.q) { const q = state.q.toLowerCase(); list = list.filter(l => l.title.toLowerCase().includes(q)); }
+    const pv = l => l.price == null ? Infinity : l.price;
+    // discount vs market midpoint, for "best vs market" sort
+    const disc = l => (l.price != null && l.mLo != null) ? (l.price - (l.mLo + l.mHi) / 2) : Infinity;
+    if (state.sort === "new") list.sort((a,b) => (b._new - a._new) || (new Date(b.posted) - new Date(a.posted)));
+    else if (state.sort === "deal") list.sort((a,b) => (b._deal - a._deal) || (disc(a) - disc(b)));
+    else if (state.sort === "phi") list.sort((a,b) => (b.price==null?-1:b.price) - (a.price==null?-1:a.price));
+    else if (state.sort === "plo") list.sort((a,b) => pv(a) - pv(b));
+    return list;
+  }
+
+  const SCAN_ICON = { good:"✓", warn:"⚠", info:"›" };
+
+  function marketLine(l){
+    if (l.mLo == null) return `<div class="market">Markt <span class="mv">n.v.t. (lot)</span></div>`;
+    const range = `€${l.mLo}–${l.mHi}`;
+    let v = "";
+    if (l.price != null){
+      if (l.price < l.mLo) v = `<span class="verdict deal">Onder markt</span>`;
+      else if (l.price > l.mHi) v = `<span class="verdict warn">Boven markt</span>`;
+      else v = `<span class="verdict info">Marktconform</span>`;
+    } else {
+      v = `<span class="verdict info">Richtprijs</span>`;
+    }
+    return `<div class="market">eBay est. <span class="mv">${range}</span>${v}</div>`;
+  }
+  function scanLine(l){
+    return `<div class="scan ${l.sflag}"><span class="si">${SCAN_ICON[l.sflag]}</span><span>${esc(l.scan)}</span><span class="src">${l.ssrc}</span></div>`;
+  }
+
+  function card(l){
+    const imgUrl = IMG + l.img + IMG_RULE;
+    let flags = "";
+    if (l._new)  flags += `<span class="fb new"><span class="b"></span>New</span>`;
+    if (l._deal) flags += `<span class="fb deal">Deal</span>`;
+    const tag = l.price == null ? `<span class="tag auction">Bieden</span>` : `<span class="tag">Vaste prijs</span>`;
+    const priceCls = l.price == null ? "price bid" : "price";
+    const seller = l.pro
+      ? `<span class="seller pro"><span class="sd"></span>${l.seller ? esc(l.seller)+" · " : "Collector · "}${l.ads}+ ads · dealer</span>`
+      : `<span class="seller private"><span class="sd"></span>Private find${l.seller ? " · "+esc(l.seller) : ""}</span>`;
+    return `
+      <article class="card ${l.brand}">
+        <div class="thumb">
+          <span class="ph">${BRAND[l.brand].label}</span>
+          <img src="${imgUrl}" alt="${esc(l.title)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" />
+          <span class="chan">${BRAND[l.brand].label}</span>
+          <div class="flags">${flags}</div>
+        </div>
+        <div class="body">
+          <h2 class="title">${esc(l.title)}</h2>
+          <div class="price-row"><span class="${priceCls}">${fmtPrice(l)}</span>${tag}</div>
+          <div class="meta"><span>${esc(l.loc)}</span><span class="sep">·</span><span>${fmtDate(l)}</span></div>
+          ${marketLine(l)}
+          ${scanLine(l)}
+          ${seller}
+          <div class="card-foot"><a href="${href(l)}" target="_blank" rel="noopener noreferrer">Open on Marktplaats <span class="arw">↗</span></a></div>
+        </div>
+      </article>`;
+  }
+
+  function renderFeed(){
+    const list = currentList();
+    const feed = document.getElementById("feed");
+    if (!list.length){ feed.innerHTML = `<div class="empty">No listings match this filter.<br>Try widening the price band or turning off a toggle.</div>`; return; }
+    feed.innerHTML = list.map(card).join("");
+  }
+
+  function bindSeg(id, key){
+    document.getElementById(id).addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return;
+      state[key] = b.dataset.ch || b.dataset.pr;
+      [...e.currentTarget.children].forEach(x => x.classList.toggle("on", x === b));
+      renderFeed();
+    });
+  }
+  bindSeg("chanSeg", "chan");
+  bindSeg("priceSeg", "price");
+
+  function bindToggle(id, key){
+    const el = document.getElementById(id);
+    const flip = () => { state[key] = !state[key]; el.classList.toggle("on", state[key]); el.setAttribute("aria-checked", state[key]); renderFeed(); };
+    el.addEventListener("click", flip);
+    el.addEventListener("keydown", e => { if (e.key === " " || e.key === "Enter"){ e.preventDefault(); flip(); } });
+  }
+  bindToggle("oppToggle", "oppOnly");
+  bindToggle("newToggle", "newOnly");
+
+  document.getElementById("search").addEventListener("input", e => { state.q = e.target.value.trim(); renderFeed(); });
+  document.getElementById("sort").addEventListener("change", e => { state.sort = e.target.value; renderFeed(); });
+
+  document.getElementById("themeBtn").addEventListener("click", () => {
+    const cur = document.documentElement.getAttribute("data-theme");
+    const dark = cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+
+  renderStats();
+  renderFeed();
+</script>
+</body>
+</html>
