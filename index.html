@@ -104,6 +104,9 @@
   .thumb .chan { position:absolute; left:10px; top:10px; font-family:var(--font-mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; padding:3px 8px; border-radius:5px; backdrop-filter:blur(6px); }
   .card.sw .thumb .chan { color:#1a1400; background:color-mix(in srgb, var(--sw) 88%, transparent); }
   .card.tmnt .thumb .chan { color:#06210a; background:color-mix(in srgb, var(--tmnt) 88%, transparent); }
+  .thumb .plat { position:absolute; left:10px; bottom:10px; font-family:var(--font-mono); font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:3px 7px; border-radius:5px; backdrop-filter:blur(6px); }
+  .thumb .plat.mp { color:#eaf0ff; background:rgba(18,28,58,.74); }
+  .thumb .plat.vinted { color:#04302f; background:color-mix(in srgb, #09b1ba 90%, transparent); }
   .thumb .flags { position:absolute; right:10px; top:10px; display:flex; flex-direction:column; gap:6px; align-items:flex-end; }
   .thumb .fb { font-family:var(--font-mono); font-size:9.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; border-radius:5px; padding:3px 7px; display:inline-flex; align-items:center; gap:5px; }
   .thumb .fb.new { color:#fff; background:var(--alert); }
@@ -180,6 +183,11 @@
       <button data-ch="sw"><span class="g"></span>Star Wars</button>
       <button data-ch="tmnt"><span class="g"></span>Turtles</button>
     </div>
+    <div class="seg" id="platSeg" aria-label="Platform">
+      <button data-pl="all" class="on">Both</button>
+      <button data-pl="mp">Marktplaats</button>
+      <button data-pl="vinted">Vinted</button>
+    </div>
     <div class="seg" id="priceSeg" aria-label="Price band">
       <button data-pr="all" class="on">Any €</button>
       <button data-pr="lo">&le; €50</button>
@@ -205,7 +213,8 @@
   <section class="feed" id="feed"></section>
 
   <footer class="foot">
-    <div><b>What this is.</b> A personal watch feed for vintage (original-era) Star Wars &amp; Teenage Mutant Ninja Turtles toys on Marktplaats. Modern reissues are filtered out. Items posted since the last sync are flagged <b>NEW</b>.</div>
+    <div><b>What this is.</b> A personal watch feed for vintage (original-era) Star Wars &amp; Teenage Mutant Ninja Turtles toys across <b>Marktplaats</b> and <b>Vinted</b>. Modern reissues are filtered out. Marktplaats items posted since the last sync are flagged <b>NEW</b>.</div>
+    <div style="margin-top:8px"><b>On Vinted.</b> Vinted blocks bulk access, so its items are found via search and pulled one by one — coverage is partial and there's no reliable post date (so no NEW flag). Prices are region-converted, shown as <b>≈ €</b>. Every Vinted seller is a private individual, so all Vinted items count as opportunities.</div>
     <div style="margin-top:8px"><b>Seller read.</b> <span style="color:var(--deal)">Private find</span> = a one-off / small private seller, where the underpriced buys tend to be. <span style="color:var(--ink-dim)">Dealer / Collector</span> = an account running many varied listings. Flip on <b>Opportunities only</b> to hide the pros.</div>
     <div style="margin-top:8px"><b>Market &amp; scan.</b> <span style="color:var(--deal)">Market (eBay est.)</span> is a rough loose/complete range for comparison — <span style="color:var(--deal)">Onder markt</span> means the ask sits below it. The <b>scan</b> line reports completeness (weapons/accessories); <span style="color:var(--ink-faint)">FOTO</span> = read from the photo, <span style="color:var(--ink-faint)">LISTING</span> = from the seller's text.</div>
     <div style="margin-top:8px">Estimates and classifications are guidance, not gospel. Prices and stock move fast — always confirm on Marktplaats. Not affiliated with Marktplaats or eBay.</div>
@@ -260,28 +269,40 @@
     { brand:"tmnt", title:"Vintage TMNT RetroCatapult, compleet", price:60, loc:"'s-Heerenberg", posted:"2026-07-20", img:"5d1a6e46-0c7f-48ff-b727-27d09bb4341c", seller:null, pro:true, ads:5, mLo:30, mHi:60, scan:"Compleet (verkoper) ✓ — onderdelen checken", sflag:"good", ssrc:"LISTING" },
     { brand:"tmnt", title:"Vintage TMNT TurtleCycle, compleet", price:75, loc:"'s-Heerenberg", posted:"2026-07-20", img:"be046760-5285-4580-aa70-80767b04aca9", seller:null, pro:true, ads:5, mLo:35, mHi:75, scan:"Compleet (verkoper) ✓", sflag:"good", ssrc:"LISTING" },
     { brand:"tmnt", title:"Vintage Teenage Mutant Ninja Turtles actiefiguren, set b", price:null, loc:"Rijen", posted:"2026-07-16", img:"d3073af0-545c-434a-979c-086c1979596d", seller:null, pro:false, ads:1, mLo:null, mHi:null, scan:"Set figuren — losse wapens/accessoires onbekend", sflag:"info", ssrc:"LISTING" },
+
+    // ---------- VINTED (vinted.com — all private sellers; prices ≈ EUR, region-converted; no post date) ----------
+    { platform:"vinted", brand:"sw", title:"Star Wars IG-88 (Kenner) KADER vintage COO #2AB, zeer zeldzaam", price:106, approx:true, loc:"Vinted", posted:null, url:"https://www.vinted.com/items/1746916100", imgUrl:"https://images1.vinted.net/t/03_01b4a_PWAinZWxv3zWCJFiiuQJhwTn/f800/1649311927.webp?s=fe519619138bce2bf92597bd7765fd3ac6685ac6", seller:null, pro:false, ads:1, mLo:50, mHi:130, scan:"Originele rifle aanwezig ✓ (KADER-variant 1980, per listing)", sflag:"good", ssrc:"LISTING" },
+    { platform:"vinted", brand:"sw", title:"Star Wars figurine Kenner Han Solo, vintage jaren 80", price:18, approx:true, loc:"Vinted", posted:null, url:"https://www.vinted.com/items/390551098", imgUrl:"https://images1.vinted.net/t/02_006e2_nTriQvcPvndeTvMNqHWb17aC/f800/1605066039.webp?s=21a6c0aac9bbdb0abf50eb6596376201b6b10462", seller:null, pro:false, ads:1, mLo:10, mHi:30, scan:"Accessoires niet vermeld — versie/variant checken", sflag:"info", ssrc:"LISTING" },
+    { platform:"vinted", brand:"sw", title:"Figurine Star Wars Kenner (vintage)", price:13, approx:true, loc:"Vinted", posted:null, url:"https://www.vinted.com/items/3582469706", imgUrl:"https://images1.vinted.net/t/03_0089c_DH5EbkHL6CQZ19XWMF7CtoYs/f800/1696789578.webp?s=3946c3a44f1e80a6ab5ffb382c3078f12654b489", seller:null, pro:false, ads:1, mLo:8, mHi:25, scan:"Figuur/staat onbekend — controleer foto's op listing", sflag:"info", ssrc:"LISTING" },
+    { platform:"vinted", brand:"sw", title:"Vintage Kenner Star Wars POTF Gaderffii (Gaffi) stick — los onderdeel", price:null, loc:"Vinted", posted:null, url:"https://www.vinted.com/items/9040740131", imgUrl:"https://images1.vinted.net/t/06_00af6_chGBMDaj1P55VMcN1SkS9SDu/f800/1780141669.webp?s=e6f6091d6d84a02dadcb83e67ac2b952c7dbb60c", seller:null, pro:false, ads:1, mLo:5, mHi:18, scan:"Los wapen-onderdeel (Gaffi stick) — voor completering", sflag:"info", ssrc:"LISTING" },
+    { platform:"vinted", brand:"tmnt", title:"Shogun Don, Shogun Ninja TMNT Playmates 1994, sealed", price:212, approx:true, loc:"Vinted", posted:null, url:"https://www.vinted.com/items/2062174248", imgUrl:"https://images1.vinted.net/t/02_01b10_gWuX7ZK6qPT4W4YVRLEhm7LN/f800/1658888609.webp?s=39036a3085d2bbaf48407cf1b71958f6789ba1ee", seller:null, pro:false, ads:1, mLo:40, mHi:120, scan:"Sealed / ongeopend (per listing) ✓", sflag:"good", ssrc:"LISTING" },
+    { platform:"vinted", brand:"tmnt", title:"Mutant Ninja Turtles Playmates / Mirage Studios, vintage", price:19, approx:true, loc:"Vinted", posted:null, url:"https://www.vinted.com/items/4358138319", imgUrl:"https://images1.vinted.net/t/03_014ac_LNfi5PbyLn1ufSwNTBdvRSx5/f800/1713023089.webp?s=e70d86c37d8ec67f81e9d640674da5d6113313a9", seller:null, pro:false, ads:1, mLo:10, mHi:40, scan:"Vintage (per listing) — aantal/staat checken", sflag:"info", ssrc:"LISTING" },
   ];
   /* ============ END DATA ============ */
 
   const BRAND = { sw:{ label:"Star Wars" }, tmnt:{ label:"Turtles" } };
-  const state = { chan:"all", price:"all", oppOnly:false, newOnly:false, q:"", sort:"new" };
+  const state = { chan:"all", platform:"all", price:"all", oppOnly:false, newOnly:false, q:"", sort:"new" };
   const syncDate = new Date(LAST_SYNC);
+  const PLAT = { mp:{ label:"Marktplaats", short:"MP" }, vinted:{ label:"Vinted", short:"Vinted" } };
 
   function isNew(l){
+    if (!l.posted) return false;                       // unknown post date (e.g. Vinted) never flags NEW
     const p = new Date(l.posted + "T00:00:00");
     const cutoff = new Date(syncDate); cutoff.setHours(0,0,0,0); cutoff.setDate(cutoff.getDate()-1);
     return p >= cutoff;
   }
   // under-market deal: has an asking price that sits below the est. market floor
   function isDeal(l){ return l.price != null && l.mLo != null && l.price < l.mLo; }
-  LISTINGS.forEach(l => { l._new = isNew(l); l._opp = !l.pro; l._deal = isDeal(l); });
+  LISTINGS.forEach(l => { l.platform = l.platform || "mp"; l._new = isNew(l); l._opp = !l.pro; l._deal = isDeal(l); });
 
   function fmtPrice(l){
-    if (l.price == null) return "Bieden";
+    if (l.price == null) return l.platform === "vinted" ? "Prijs op Vinted" : "Bieden";
     const dec = Number.isInteger(l.price) ? 0 : 2;
-    return "€ " + l.price.toLocaleString("nl-NL", { minimumFractionDigits:dec, maximumFractionDigits:2 });
+    const s = "€ " + l.price.toLocaleString("nl-NL", { minimumFractionDigits:dec, maximumFractionDigits:2 });
+    return l.approx ? "≈ " + s : s;
   }
   function fmtDate(l){
+    if (!l.posted) return "datum onbekend";
     const p = new Date(l.posted + "T00:00:00");
     const t = new Date(syncDate); t.setHours(0,0,0,0);
     const diff = Math.round((t - p) / 86400000);
@@ -291,13 +312,16 @@
     return diff + " dagen geleden";
   }
   function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
-  function href(l){ return BASE + "/q/" + encodeURIComponent(l.title) + "/"; }
+  function href(l){ return l.url ? l.url : BASE + "/q/" + encodeURIComponent(l.title) + "/"; }
+  function imgSrc(l){ return l.imgUrl ? l.imgUrl : IMG + l.img + IMG_RULE; }
 
   function renderStats(){
     const newCount = LISTINGS.filter(l => l._new).length;
     const deals = LISTINGS.filter(l => l._deal).length;
     const opp = LISTINGS.filter(l => l._opp).length;
     const total = LISTINGS.length;
+    const mp = LISTINGS.filter(l => l.platform === "mp").length;
+    const vin = LISTINGS.filter(l => l.platform === "vinted").length;
     const s = new Date(LAST_SYNC);
     const syncStr = s.toLocaleDateString("nl-NL", { day:"2-digit", month:"short" }) + " · " + s.toLocaleTimeString("nl-NL", { hour:"2-digit", minute:"2-digit" });
     document.getElementById("syncText").textContent = "synced " + syncStr;
@@ -305,12 +329,13 @@
       <div class="stat alert"><span class="rail"></span><div class="k">New since sync</div><div class="v">${newCount}</div><div class="sub">flagged listings</div></div>
       <div class="stat deal"><span class="rail"></span><div class="k">Under market</div><div class="v">${deals}</div><div class="sub">ask &lt; eBay est.</div></div>
       <div class="stat deal"><span class="rail"></span><div class="k">Opportunities</div><div class="v">${opp}</div><div class="sub">private sellers</div></div>
-      <div class="stat"><div class="k">Now tracking</div><div class="v">${total}</div><div class="sub">vintage listings</div></div>`;
+      <div class="stat"><div class="k">Now tracking</div><div class="v">${total}</div><div class="sub">${mp} Marktplaats · ${vin} Vinted</div></div>`;
   }
 
   function currentList(){
     let list = LISTINGS.slice();
     if (state.chan !== "all") list = list.filter(l => l.brand === state.chan);
+    if (state.platform !== "all") list = list.filter(l => l.platform === state.platform);
     if (state.price === "lo") list = list.filter(l => l.price != null && l.price <= 50);
     else if (state.price === "hi") list = list.filter(l => l.price != null && l.price > 50);
     else if (state.price === "bid") list = list.filter(l => l.price == null);
@@ -347,11 +372,14 @@
   }
 
   function card(l){
-    const imgUrl = IMG + l.img + IMG_RULE;
+    const imgUrl = imgSrc(l);
     let flags = "";
     if (l._new)  flags += `<span class="fb new"><span class="b"></span>New</span>`;
     if (l._deal) flags += `<span class="fb deal">Deal</span>`;
-    const tag = l.price == null ? `<span class="tag auction">Bieden</span>` : `<span class="tag">Vaste prijs</span>`;
+    const tag = (l.price == null && l.platform !== "vinted")
+      ? `<span class="tag auction">Bieden</span>`
+      : `<span class="tag">Vaste prijs</span>`;
+    const plat = `<span class="plat ${l.platform}">${PLAT[l.platform].short}</span>`;
     const priceCls = l.price == null ? "price bid" : "price";
     const seller = l.pro
       ? `<span class="seller pro"><span class="sd"></span>${l.seller ? esc(l.seller)+" · " : "Collector · "}${l.ads}+ ads · dealer</span>`
@@ -363,6 +391,7 @@
           <img src="${imgUrl}" alt="${esc(l.title)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" />
           <span class="chan">${BRAND[l.brand].label}</span>
           <div class="flags">${flags}</div>
+          ${plat}
         </div>
         <div class="body">
           <h2 class="title">${esc(l.title)}</h2>
@@ -386,12 +415,13 @@
   function bindSeg(id, key){
     document.getElementById(id).addEventListener("click", e => {
       const b = e.target.closest("button"); if (!b) return;
-      state[key] = b.dataset.ch || b.dataset.pr;
+      state[key] = b.dataset.ch || b.dataset.pl || b.dataset.pr;
       [...e.currentTarget.children].forEach(x => x.classList.toggle("on", x === b));
       renderFeed();
     });
   }
   bindSeg("chanSeg", "chan");
+  bindSeg("platSeg", "platform");
   bindSeg("priceSeg", "price");
 
   function bindToggle(id, key){
