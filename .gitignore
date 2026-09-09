@@ -1,2 +1,5 @@
 .DS_Store
 scratchpad/
+
+# Safety copies taken before a large rewrite of index.html.
+*.bak
